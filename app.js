@@ -1,12 +1,19 @@
 const express = require('express');
 const connectDB = require('./DB/database');
 const articleRoutes = require('./routes/articleRoutes');
-require('dotenv').config()
+require('dotenv').config();
+const morgan = require('morgan');
+const cors = require('cors');
 
 connectDB()		//MongoDB database
 
-const app = express()
-app.use(express.json())	//middleware instead of bodypalser
+// Middleware
+const app = express();
+app.use(cors());
+app.options('*', cors());
+app.use(express.json())	//instead of bodypalser
+app.use(morgan('tiny'));
+
 
 // routes
 app.use('/articles', articleRoutes);
