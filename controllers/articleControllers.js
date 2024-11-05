@@ -16,4 +16,31 @@ const getArticles = async (req, res)=>{
 	}
 };
 
-module.exports = {getArticles}
+// A single article by ID
+const getArticleById = async (req, res)=> {
+	try {
+		const article = await Article.findById(req.params.id);
+		if (!article)
+			return res.status(404).json({message: 'Article not found'});
+		res.status(200).json(article);
+	} catch (err){
+		res.status(500).json({err: 'Server error'});
+	}
+}
+
+// Create a new article
+const newArticle = async (req, res)=>{
+	try {
+		const {title, content, tags, publishedDate} = req.body;
+		const article = new Article({
+			title, content, publishedDate, tags
+		});
+
+		await article.save();
+		res.status(201).json(article);
+	} catch (err){
+		res.status(500).json({message: 'Server error'});
+	}
+};
+
+module.exports = {getArticles, getArticleById, newArticle}
